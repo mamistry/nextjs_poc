@@ -21,6 +21,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: us-east-1
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          if_key_exists: fail
+          key: ${{ secrets.SSH_DEPLOY_KEY }}
+          known_hosts: github.com
+          name: id_rsa
       - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 0.14.8

@@ -53,7 +53,7 @@ jobs:
           terraform apply -var-file="./${{ inputs.service-env }}.tfvars" -auto-approve -input=false
       - name: s3 sync
         run: |-
-          aws s3 sync ./.open-next/assets s3://br-blockletes-beats-${{ inputs.service-env }}/
+          aws s3 sync ./.open-next/assets s3://nextjs-poc-beats-${{ inputs.service-env }}/
       - name: Semantic release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

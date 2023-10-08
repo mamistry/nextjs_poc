@@ -1,0 +1,57 @@
+name: App Deploy
+on:
+  workflow_call:
+    inputs:
+      service-env:
+        required: true
+        type: string
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: us-east-1
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 0.14.8
+          terraform_wrapper: false
+      - name: Cache yarn dependencies
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - run: git fetch origin main
+      - name: Install packages
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn
+      - name: Build app
+        run: |- 
+          yarn build
+          yarn aws_build
+      - name: Terraform Apply
+        working-directory: deployments/web
+        run: |-
+          terraform init -backend-config="bucket=test-blockletes-tf-state" -backend-config="key=br-blockletes-beats/${{ inputs.service-env }}/terraform.tfstate" -backend-config="region=us-east-1"
+          terraform apply -var-file="./${{ inputs.service-env }}.tfvars" -auto-approve -input=false
+      - name: s3 sync
+        run: |-
+          aws s3 sync /.open-next/assets s3://br-blockletes-beats-${{ inputs.service-env }}/
+      - name: Semantic release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

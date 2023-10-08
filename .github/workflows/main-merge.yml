@@ -1,0 +1,11 @@
+name: PR builds for main
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Prod-pr-deploy:
+    uses: ./.github/workflows/app-deploy.yml
+    secrets: inherit
+    with:
+      service-env: stage

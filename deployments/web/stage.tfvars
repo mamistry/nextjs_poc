@@ -1,0 +1,6 @@
+lambda_dir="../../.open-next"
+env="stage"
+custom_domain_zone_name="beatsnext.com"
+custom_domain="beatsnext.com"
+cloudfront_cert="arn:aws:acm:us-east-1:494055087689:certificate/f7f318d5-2cdd-4712-927e-f9a86a70262b"
+service_name="nextjs-poc-beats"

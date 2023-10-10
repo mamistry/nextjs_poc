@@ -28,7 +28,7 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: development
+          source_branch: develop
           target_branch: qa
           title: My pull request
           template: .github/PULL_REQUEST_TEMPLATE.md

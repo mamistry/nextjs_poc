@@ -20,20 +20,36 @@ jobs:
         run: npm install 
       - name: Build app
         run: npm run build 
-      - name: Semantic release
+      # - name: Semantic release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: npx semantic-release
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 19.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+      - name: Create Branch
+        id: create_branch
+        uses: lablnet/create-branch-from-tag@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{ steps.semantic-release.outputs.new_release_version }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
       - name: Run the Action
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: develop
+          source_branch: ${{ steps.create_branch.outputs.branch_name }}
           target_branch: qa
-          title: My pull request
-          template: .github/PULL_REQUEST_TEMPLATE.md
+          title: Automated PR ${{ steps.semantic-release.outputs.new_release_version }}
+          template: .github/pull_request_template.md
           body: "**Automated pull request**"
-          draft: true
+          draft: false
           old_string: "<!-- Add your description here -->"
           new_string: "** Automatic pull request**"
           get_diff: true

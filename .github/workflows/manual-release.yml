@@ -1,0 +1,16 @@
+name: Manual Semantic release 
+
+on:
+  workflow_dispatch:
+    tags:
+
+jobs:
+  Release-deploy:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/app-deploy.yml
+    secrets: inherit
+    with:
+      service-env: stage

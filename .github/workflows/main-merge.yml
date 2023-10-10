@@ -1,0 +1,15 @@
+name: PR builds for main
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Prod-deploy:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/app-deploy.yml
+    secrets: inherit
+    with:
+      service-env: stage

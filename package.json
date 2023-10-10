@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "aws_build": "npx open-next@1.4.0 build --build-command 'random_thing || true'"
   },
   "dependencies": {
     "next": "latest",

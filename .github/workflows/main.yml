@@ -38,6 +38,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: v${{ steps.semantic-release.outputs.new_release_version }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
       - name: Run the Action
         uses: devops-infra/action-pull-request@v0.5.5
         with:

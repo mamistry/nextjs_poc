@@ -42,7 +42,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           source_branch: ${{ steps.create_branch.outputs.branch_name }}
-          target_branch: qa
+          target_branch: ${{ github.ref == 'refs/heads/qa' && 'main' || 'qa' }}
           title: Automated PR ${{ steps.semantic-release.outputs.new_release_version }}
           template: .github/automated_pull_request_template.md
           body: "**Automated pull request**"

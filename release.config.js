@@ -1,12 +1,8 @@
 const config = {
-  branches: ['main', {name: 'qa', prerelease: true}],
+  branches: ['main', {name: 'qa', prerelease: true}, {name: 'develop', prerelease: true}],
   plugins: [
     '@semantic-release/commit-analyzer', 
-    '@semantic-release/release-notes-generator', 
-    ['@semantic-release/git', {
-      'assets': [".next/*"],
-      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-    }],
+    '@semantic-release/release-notes-generator',
     '@semantic-release/github'
   ]
 };

@@ -2,6 +2,9 @@ name: Semantic release
 
 on:
   workflow_dispatch:
+    branches:
+      - develop
+      - qa
 
 jobs:
   release:
@@ -20,10 +23,6 @@ jobs:
         run: npm install 
       - name: Build app
         run: npm run build 
-      # - name: Semantic release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: npx semantic-release
       - name: Semantic Release
         id: semantic-release
         uses: cycjimmy/semantic-release-action@v4

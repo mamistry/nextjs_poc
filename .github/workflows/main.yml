@@ -47,11 +47,11 @@ jobs:
           source_branch: ${{ steps.create_branch.outputs.branch_name }}
           target_branch: qa
           title: Automated PR ${{ steps.semantic-release.outputs.new_release_version }}
-          template: .github/pull_request_template.md
+          template: .github/automated_pull_request_template.md
           body: "**Automated pull request**"
           draft: false
-          old_string: "<!-- Add your description here -->"
-          new_string: "** Automatic pull request**"
+          old_string: "<!-- Add your Release Notes here -->"
+          new_string: "${{ steps.semantic-release.outputs.new_release_notes }}"
           get_diff: true
           ignore_users: "dependabot"
           allow_no_diff: false

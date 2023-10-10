@@ -20,20 +20,27 @@ jobs:
         run: npm install 
       - name: Build app
         run: npm run build 
-      - name: Semantic release
+      # - name: Semantic release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: npx semantic-release
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 19.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
       - name: Run the Action
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           source_branch: develop
           target_branch: qa
-          title: My pull request
+          title: My pull request ${{ steps.semantic-release.outputs.new_release_version }}
           template: .github/pull_request_template.md
           body: "**Automated pull request**"
-          draft: true
+          draft: false
           old_string: "<!-- Add your description here -->"
           new_string: "** Automatic pull request**"
           get_diff: true
